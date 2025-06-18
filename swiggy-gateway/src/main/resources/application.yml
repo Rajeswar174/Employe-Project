@@ -1,0 +1,38 @@
+server:
+  port: 7070
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: EmployeeService
+          uri: http://localhost:9090
+          predicates:
+            - Path=/employees/**
+          filters:
+            - AuthenticationFilter
+
+        - id: ProjectService
+          uri: http://localhost:9080
+          predicates:
+            - Path=/projects/**
+          filters:
+            - AuthenticationFilter
+
+        - id: AuthService
+          uri: http://localhost:6060
+          predicates:
+            - Path=/auth/**
+
+        - id: NotificationService
+          uri: http://localhost:8082
+          predicates:
+            - Path=/notifications/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
